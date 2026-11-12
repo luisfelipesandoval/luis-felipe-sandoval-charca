@@ -1,0 +1,7 @@
+# robots.txt para Luis Felipe Sandoval Charca
+# Reemplaza https://tu-dominio-en-vercel.vercel.app por tu dominio real en Vercel
+
+User-agent: *
+Allow: /
+
+Sitemap: https://tu-dominio-en-vercel.vercel.app/sitemap.xml
