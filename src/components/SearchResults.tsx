@@ -1,6 +1,8 @@
 import { ExternalLink, Globe } from 'lucide-react';
 import { MAIN_SEARCH_RESULTS, PEOPLE_ALSO_SEARCH, SearchResultItem } from '../data/profile';
 import { TabId } from '../utils/serpUtils';
+import { matchEasterEggQuery } from '../utils/easterEggs';
+import { VideoResultCard } from './VideoResultCard';
 
 interface SearchResultsProps {
   searchQuery: string;
@@ -9,8 +11,10 @@ interface SearchResultsProps {
 
 export function SearchResults({ searchQuery, onSelectFriendsTab }: SearchResultsProps) {
   const normalizedQuery = searchQuery.trim().toLowerCase();
+  const isEasterEggPhrase = Boolean(matchEasterEggQuery(searchQuery));
   const isDefaultQuery =
     !normalizedQuery ||
+    isEasterEggPhrase ||
     normalizedQuery === 'luis felipe sandoval charca' ||
     normalizedQuery === 'luis felipe';
 
@@ -89,6 +93,9 @@ export function SearchResults({ searchQuery, onSelectFriendsTab }: SearchResults
             )}
           </article>
         ))}
+
+        {/* Google-style Video Search Result with interactive Play animation */}
+        <VideoResultCard />
       </section>
 
       {/* "Las personas también buscan" Section */}

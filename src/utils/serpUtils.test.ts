@@ -7,6 +7,14 @@ import {
   isValidMetaDescriptionLength,
   isDescriptiveLinkText,
 } from './serpUtils';
+import {
+  matchEasterEggQuery,
+  evaluateRpsRound,
+  flipCoinOutcome,
+  rollDiceOutcome,
+  pickRandomEasterEgg,
+  ROULETTE_PHRASES,
+} from './easterEggs';
 import { SEO_CONFIG, MAIN_SEARCH_RESULTS, PROFILE_DATA } from '../data/profile';
 import { FRIENDS_LIST } from '../data/friends';
 
@@ -29,12 +37,10 @@ test('formatSearchStatsText produces exact required Spanish phrasing', () => {
 test('getWordmarkColoredChars cycles through blue, red, yellow, and green for Luis Felipe', () => {
   const colored = getWordmarkColoredChars('Luis Felipe');
   assert.equal(colored.length, 11);
-  // First 4 non-space letters: L (blue), u (red), i (yellow), s (green)
   assert.equal(colored[0].color, '#4285F4');
   assert.equal(colored[1].color, '#EA4335');
   assert.equal(colored[2].color, '#FBBC05');
   assert.equal(colored[3].color, '#34A853');
-  // Space at index 4 does not advance color cycle, so F at index 5 is blue again
   assert.equal(colored[4].char, ' ');
   assert.equal(colored[5].color, '#4285F4');
 });
@@ -74,4 +80,30 @@ test('All main search results and profile links use descriptive text', () => {
   assert.equal(isDescriptiveLinkText(PROFILE_DATA.career.name), true);
   assert.equal(isDescriptiveLinkText(PROFILE_DATA.university.name), true);
   assert.equal(isDescriptiveLinkText(PROFILE_DATA.professor.name), true);
+});
+
+test('matchEasterEggQuery maps the 5 secret phrases accurately', () => {
+  assert.equal(matchEasterEggQuery('piedra papel o tijera'), 'rps');
+  assert.equal(matchEasterEggQuery('  Piedra, Papel o Tijera '), 'rps');
+  assert.equal(matchEasterEggQuery('lanzar moneda'), 'coin');
+  assert.equal(matchEasterEggQuery('tirar dado'), 'dice');
+  assert.equal(matchEasterEggQuery('dino'), 'dino');
+  assert.equal(matchEasterEggQuery('ruleta'), 'roulette');
+  assert.equal(matchEasterEggQuery('Luis Felipe Sandoval Charca'), null);
+});
+
+test('Easter egg game mechanics (RPS, coin, dice, random picker, roulette) work deterministically', () => {
+  assert.equal(evaluateRpsRound('piedra', 'tijera'), 'win');
+  assert.equal(evaluateRpsRound('piedra', 'papel'), 'loss');
+  assert.equal(evaluateRpsRound('papel', 'papel'), 'tie');
+
+  assert.equal(flipCoinOutcome(0.2), 'cara');
+  assert.equal(flipCoinOutcome(0.8), 'sello');
+
+  assert.equal(rollDiceOutcome(0.0), 1);
+  assert.equal(rollDiceOutcome(0.99), 6);
+
+  const picked = pickRandomEasterEgg(0.5);
+  assert.equal(['rps', 'coin', 'dice', 'dino', 'roulette'].includes(picked), true);
+  assert.equal(ROULETTE_PHRASES.length >= 3, true);
 });

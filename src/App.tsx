@@ -8,6 +8,7 @@ import { Header } from './components/Header';
 import { KnowledgePanel } from './components/KnowledgePanel';
 import { SearchResults } from './components/SearchResults';
 import { FriendsResults } from './components/FriendsResults';
+import { EasterEggArena } from './components/EasterEggArena';
 import { Footer } from './components/Footer';
 import {
   formatSearchStatsText,
@@ -15,11 +16,18 @@ import {
   SEARCH_TABS,
   TabId,
 } from './utils/serpUtils';
+import {
+  EASTER_EGG_SUGGESTIONS,
+  EasterEggGameId,
+  matchEasterEggQuery,
+  pickRandomEasterEgg,
+} from './utils/easterEggs';
 
 export default function App() {
   const [searchQuery, setSearchQuery] = useState('Luis Felipe Sandoval Charca');
   const [activeTab, setActiveTab] = useState<TabId>('todo');
   const [decorativeToast, setDecorativeToast] = useState<string | null>(null);
+  const [activeEasterEgg, setActiveEasterEgg] = useState<EasterEggGameId | null>(null);
 
   // Random seconds generated once on each load (e.g. "0,42")
   const randomSeconds = useMemo(() => generateRandomSearchSeconds(), []);
@@ -32,7 +40,6 @@ export default function App() {
       setActiveTab(tabId);
       setDecorativeToast(null);
     } else {
-      // Keep functional tabs ("todo" or "amigos") active while giving gentle feedback for decorative tabs
       setDecorativeToast(
         `La pestaña "${tabConfig.label}" es decorativa en esta presentación personal. Mostrando los resultados de "${
           activeTab === 'amigos' ? 'Amigos' : 'Todo'
@@ -44,10 +51,47 @@ export default function App() {
   const handleSearchSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     setDecorativeToast(null);
+    const matchedGame = matchEasterEggQuery(searchQuery);
+    if (matchedGame) {
+      setActiveEasterEgg(matchedGame);
+      setActiveTab('todo');
+    }
+  };
+
+  const handleSelectSuggestion = (phrase: string, gameId: EasterEggGameId) => {
+    setSearchQuery(phrase);
+    setActiveEasterEgg(gameId);
+    setActiveTab('todo');
+    setDecorativeToast(null);
+  };
+
+  const handleFeelingLucky = () => {
+    const randomGame = pickRandomEasterEgg(Math.random(), activeEasterEgg);
+    const meta = EASTER_EGG_SUGGESTIONS.find((item) => item.id === randomGame);
+    if (meta) {
+      setSearchQuery(meta.phrase);
+    }
+    setActiveEasterEgg(randomGame);
+    setActiveTab('todo');
+    setDecorativeToast(null);
+  };
+
+  const handleSelectGameInsideArena = (gameId: EasterEggGameId) => {
+    const meta = EASTER_EGG_SUGGESTIONS.find((item) => item.id === gameId);
+    if (meta) {
+      setSearchQuery(meta.phrase);
+    }
+    setActiveEasterEgg(gameId);
+  };
+
+  const handleCloseEasterEgg = () => {
+    setActiveEasterEgg(null);
+    setSearchQuery('Luis Felipe Sandoval Charca');
   };
 
   const handleResetSearch = () => {
     setSearchQuery('Luis Felipe Sandoval Charca');
+    setActiveEasterEgg(null);
     setActiveTab('todo');
     setDecorativeToast(null);
   };
@@ -61,11 +105,13 @@ export default function App() {
         Luis Felipe Sandoval Charca – Estudiante de Administración de Negocios en la Universidad Católica San Pablo (UCSP)
       </h1>
 
-      {/* 1 & 2. Top bar (Wordmark + Search Bar) and Tabs (Todo, Imágenes, Videos, Amigos, Noticias) */}
+      {/* 1 & 2. Top bar (Wordmark + Search Bar + "Voy a tener suerte") and Tabs */}
       <Header
         searchQuery={searchQuery}
         onSearchQueryChange={setSearchQuery}
         onSearchSubmit={handleSearchSubmit}
+        onSelectSuggestion={handleSelectSuggestion}
+        onFeelingLucky={handleFeelingLucky}
         onResetSearch={handleResetSearch}
         activeTab={activeTab}
         onTabChange={handleTabChange}
@@ -94,8 +140,16 @@ export default function App() {
               <KnowledgePanel />
             </div>
 
-            {/* 5 & 6. Main Search Results + "Las personas también buscan": Bottom on mobile (order-2), Left on desktop (lg:order-1) */}
+            {/* 5 & 6. Easter Egg Game Panel (when active) + Main Search Results + "Las personas también buscan" */}
             <div className="w-full flex-1 max-w-[652px] order-2 lg:order-1">
+              {activeEasterEgg && (
+                <EasterEggArena
+                  activeGame={activeEasterEgg}
+                  onSelectGame={handleSelectGameInsideArena}
+                  onClose={handleCloseEasterEgg}
+                />
+              )}
+
               <SearchResults
                 searchQuery={searchQuery}
                 onSelectFriendsTab={handleTabChange}
