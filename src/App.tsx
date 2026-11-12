@@ -20,14 +20,18 @@ import {
   EASTER_EGG_SUGGESTIONS,
   EasterEggGameId,
   matchEasterEggQuery,
-  pickRandomEasterEgg,
 } from './utils/easterEggs';
 
 export default function App() {
   const [searchQuery, setSearchQuery] = useState('Luis Felipe Sandoval Charca');
   const [activeTab, setActiveTab] = useState<TabId>('todo');
   const [decorativeToast, setDecorativeToast] = useState<string | null>(null);
-  const [activeEasterEgg, setActiveEasterEgg] = useState<EasterEggGameId | null>(null);
+  const [activeEasterEgg, setActiveEasterEgg] = useState<EasterEggGameId | null>(() => {
+    if (typeof window !== 'undefined' && window.location.search.includes('autostart=1')) {
+      return 'stardash';
+    }
+    return null;
+  });
 
   // Random seconds generated once on each load (e.g. "0,42")
   const randomSeconds = useMemo(() => generateRandomSearchSeconds(), []);
@@ -66,14 +70,19 @@ export default function App() {
   };
 
   const handleFeelingLucky = () => {
-    const randomGame = pickRandomEasterEgg(Math.random(), activeEasterEgg);
-    const meta = EASTER_EGG_SUGGESTIONS.find((item) => item.id === randomGame);
-    if (meta) {
-      setSearchQuery(meta.phrase);
-    }
-    setActiveEasterEgg(randomGame);
+    // Opens Star Dash directly when not already open, or cycles to another game if desired
+    setSearchQuery('jugar');
+    setActiveEasterEgg('stardash');
     setActiveTab('todo');
     setDecorativeToast(null);
+  };
+
+  const handleOpenStarDash = () => {
+    setSearchQuery('jugar');
+    setActiveEasterEgg('stardash');
+    setActiveTab('todo');
+    setDecorativeToast(null);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   const handleSelectGameInsideArena = (gameId: EasterEggGameId) => {
@@ -140,7 +149,7 @@ export default function App() {
               <KnowledgePanel />
             </div>
 
-            {/* 5 & 6. Easter Egg Game Panel (when active) + Main Search Results + "Las personas también buscan" */}
+            {/* 5 & 6. Easter Egg / Star Dash Panel + Main Search Results + Top 10 Global + Libro de Visitas */}
             <div className="w-full flex-1 max-w-[652px] order-2 lg:order-1">
               {activeEasterEgg && (
                 <EasterEggArena
@@ -153,6 +162,7 @@ export default function App() {
               <SearchResults
                 searchQuery={searchQuery}
                 onSelectFriendsTab={handleTabChange}
+                onPlayStarDash={handleOpenStarDash}
               />
             </div>
           </div>

@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 180 180" width="180" height="180">
+  <!-- Outer subtle white ring so the circular icon has high contrast in both light and dark browser tabs -->
+  <circle cx="90" cy="90" r="86" fill="#4285F4" stroke="#ffffff" stroke-width="6" />
+  <text
+    x="90"
+    y="115"
+    text-anchor="middle"
+    fill="#ffffff"
+    font-family="Arial, Roboto, Helvetica, sans-serif"
+    font-weight="700"
+    font-size="76"
+    letter-spacing="-2"
+  >LF</text>
+</svg>

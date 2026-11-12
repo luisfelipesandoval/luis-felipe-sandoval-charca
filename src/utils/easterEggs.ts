@@ -1,4 +1,4 @@
-export type EasterEggGameId = 'rps' | 'coin' | 'dice' | 'dino' | 'roulette';
+export type EasterEggGameId = 'stardash' | 'rps' | 'coin' | 'dice' | 'dino' | 'roulette';
 
 export interface EasterEggSuggestion {
   id: EasterEggGameId;
@@ -8,6 +8,12 @@ export interface EasterEggSuggestion {
 }
 
 export const EASTER_EGG_SUGGESTIONS: EasterEggSuggestion[] = [
+  {
+    id: 'stardash',
+    phrase: 'jugar',
+    title: 'Star Dash – Arcade Espacial 2D',
+    badge: 'Arcade + Ranking Top 10',
+  },
   {
     id: 'rps',
     phrase: 'piedra papel o tijera',
@@ -87,7 +93,7 @@ export const ROULETTE_PHRASES: RouletteSlice[] = [
 ];
 
 /**
- * Normalizes a search string and checks if it triggers one of the 5 Easter-egg games.
+ * Normalizes a search string and checks if it triggers Star Dash ("jugar") or one of the Easter-egg games.
  */
 export function matchEasterEggQuery(rawQuery: string): EasterEggGameId | null {
   const normalized = rawQuery
@@ -100,6 +106,14 @@ export function matchEasterEggQuery(rawQuery: string): EasterEggGameId | null {
 
   if (!normalized) return null;
 
+  if (
+    normalized === 'jugar' ||
+    normalized === 'star dash' ||
+    normalized === 'stardash' ||
+    normalized === 'juego'
+  ) {
+    return 'stardash';
+  }
   if (
     normalized === 'piedra papel o tijera' ||
     normalized === 'piedra papel tijera' ||
@@ -124,7 +138,7 @@ export function matchEasterEggQuery(rawQuery: string): EasterEggGameId | null {
 }
 
 /**
- * Picks one of the 5 Easter-egg games at random for the "Voy a tener suerte" button.
+ * Picks an Easter-egg game at random.
  */
 export function pickRandomEasterEgg(
   randomVal: number = Math.random(),

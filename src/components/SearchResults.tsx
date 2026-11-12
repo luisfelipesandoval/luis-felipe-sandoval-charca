@@ -3,13 +3,20 @@ import { MAIN_SEARCH_RESULTS, PEOPLE_ALSO_SEARCH, SearchResultItem } from '../da
 import { TabId } from '../utils/serpUtils';
 import { matchEasterEggQuery } from '../utils/easterEggs';
 import { VideoResultCard } from './VideoResultCard';
+import { LeaderboardTable } from './LeaderboardTable';
+import { GuestbookSection } from './GuestbookSection';
 
 interface SearchResultsProps {
   searchQuery: string;
   onSelectFriendsTab: (tab: TabId) => void;
+  onPlayStarDash: () => void;
 }
 
-export function SearchResults({ searchQuery, onSelectFriendsTab }: SearchResultsProps) {
+export function SearchResults({
+  searchQuery,
+  onSelectFriendsTab,
+  onPlayStarDash,
+}: SearchResultsProps) {
   const normalizedQuery = searchQuery.trim().toLowerCase();
   const isEasterEggPhrase = Boolean(matchEasterEggQuery(searchQuery));
   const isDefaultQuery =
@@ -151,6 +158,12 @@ export function SearchResults({ searchQuery, onSelectFriendsTab }: SearchResults
           ))}
         </div>
       </section>
+
+      {/* Real-time Top 10 Global Ranking Section (Star Dash) */}
+      <LeaderboardTable onPlayStarDash={onPlayStarDash} />
+
+      {/* Persistent Firebase Guestbook ("Libro de visitas") Section */}
+      <GuestbookSection />
     </div>
   );
 }

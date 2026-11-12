@@ -1,0 +1,82 @@
+{
+  "entities": {
+    "GuestbookComment": {
+      "title": "GuestbookComment",
+      "description": "A public guestbook comment left by a visitor on Luis Felipe Sandoval Charca's personal page.",
+      "type": "object",
+      "properties": {
+        "authorName": {
+          "type": "string",
+          "description": "Display name of the visitor or 'Anónimo'.",
+          "minLength": 1,
+          "maxLength": 60,
+          "pattern": "^(?!.*(https?://|www\\.)).+$"
+        },
+        "message": {
+          "type": "string",
+          "description": "Short guestbook comment up to 200 characters without URLs.",
+          "minLength": 1,
+          "maxLength": 200,
+          "pattern": "^(?!.*(https?://|www\\.)).+$"
+        },
+        "visitorId": {
+          "type": "string",
+          "description": "Anonymous client fingerprint token used for rate-limiting.",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^[a-zA-Z0-9_\\-]+$"
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Server timestamp when the comment was created."
+        }
+      },
+      "required": ["authorName", "message", "visitorId", "createdAt"]
+    },
+    "LeaderboardScore": {
+      "title": "LeaderboardScore",
+      "description": "An immutable high-score entry for the Star Dash 2D arcade game.",
+      "type": "object",
+      "properties": {
+        "playerName": {
+          "type": "string",
+          "description": "Player display name (1 to 15 characters, filtered against offensive words and links).",
+          "minLength": 1,
+          "maxLength": 15
+        },
+        "score": {
+          "type": "integer",
+          "description": "Reasonable game score achieved in Star Dash (1 to 150000)."
+        },
+        "visitorId": {
+          "type": "string",
+          "description": "Anonymous client token used to highlight the current player and rate-limit submissions.",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^[a-zA-Z0-9_\\-]+$"
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Server timestamp when the score was recorded."
+        }
+      },
+      "required": ["playerName", "score", "visitorId", "createdAt"]
+    }
+  },
+  "firestore": {
+    "/guestbook/{commentId}": {
+      "schema": {
+        "$ref": "#/entities/GuestbookComment"
+      },
+      "description": "Immutable guestbook entries ordered from newest to oldest. Only creation is permitted."
+    },
+    "/leaderboard/{scoreId}": {
+      "schema": {
+        "$ref": "#/entities/LeaderboardScore"
+      },
+      "description": "Immutable Star Dash leaderboard scores ordered by score descending. Only creation with reasonable scores is permitted."
+    }
+  }
+}

@@ -11,6 +11,7 @@ import {
   ROULETTE_PHRASES,
 } from '../utils/easterEggs';
 import { DinoMiniGame } from './DinoMiniGame';
+import { StarDashGame } from './StarDashGame';
 
 interface EasterEggArenaProps {
   activeGame: EasterEggGameId;
@@ -179,6 +180,9 @@ export function EasterEggArena({ activeGame, onSelectGame, onClose }: EasterEggA
 
       {/* Game Body */}
       <div className="p-4 sm:p-6">
+        {/* 0. STAR DASH 2D ARCADE */}
+        {activeGame === 'stardash' && <StarDashGame />}
+
         {/* 1. PIEDRA PAPEL O TIJERA */}
         {activeGame === 'rps' && (
           <div className="space-y-5">
