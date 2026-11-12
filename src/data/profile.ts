@@ -10,7 +10,7 @@
  *    placeholder circular con tus iniciales "LF".
  * ============================================================================
  */
-export const PROFILE_PHOTO_URL: string = '';
+export const PROFILE_PHOTO_URL: string = '/assets/aistudio/image_5eb07b3c.png';
 
 export interface SearchResultItem {
   id: string;

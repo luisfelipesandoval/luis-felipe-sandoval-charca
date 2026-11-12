@@ -51,10 +51,14 @@ test('SEO meta description is strictly between 150 and 160 characters', () => {
   );
 });
 
-test('FRIENDS_LIST has at least 3 example friends with # links', () => {
+test('FRIENDS_LIST includes Jhon Gutierrez and valid friend entries', () => {
   assert.equal(FRIENDS_LIST.length >= 3, true);
+  assert.equal(
+    FRIENDS_LIST.some((f) => f.url === 'https://jhongutierrez-stack.github.io/'),
+    true
+  );
   for (const friend of FRIENDS_LIST) {
-    assert.equal(friend.url, '#');
+    assert.equal(friend.url.length > 0, true);
     assert.equal(friend.name.length > 0, true);
     assert.equal(friend.description.length > 0, true);
   }

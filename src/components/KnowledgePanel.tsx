@@ -41,7 +41,7 @@ export function KnowledgePanel() {
           {showCustomPhoto ? (
             <img
               src={PROFILE_PHOTO_URL}
-              alt="Retrato de Luis Felipe Sandoval Charca, estudiante de Administración de Negocios en la UCSP"
+              alt="Luis Felipe Sandoval Charca"
               referrerPolicy="no-referrer"
               onError={() => setImageError(true)}
               className="w-full h-full object-cover"

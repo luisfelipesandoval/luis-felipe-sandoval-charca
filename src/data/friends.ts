@@ -19,12 +19,12 @@ export interface FriendItem {
  */
 export const FRIENDS_LIST: FriendItem[] = [
   {
-    id: 'amigo-1',
-    name: 'Compañero(a) de UCSP 1 – Administración de Negocios',
+    id: 'jhon-gutierrez',
+    name: 'Jhon Gutierrez – Compañero de UCSP',
     description:
-      'Estudiante de la Universidad Católica San Pablo (UCSP) y compañero del curso de Introducción a la Computación. Interesado en gestión empresarial, estrategia comercial y proyectos colaborativos.',
-    url: '#',
-    displayUrl: 'https://ucsp.edu.pe › estudiantes › companero-1',
+      'Página personal y portafolio académico de Jhon Gutierrez, compañero de estudios en la Universidad Católica San Pablo (UCSP) en el curso de Introducción a la Computación.',
+    url: 'https://jhongutierrez-stack.github.io/',
+    displayUrl: 'https://jhongutierrez-stack.github.io',
   },
   {
     id: 'amigo-2',
