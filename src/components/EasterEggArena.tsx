@@ -12,6 +12,7 @@ import {
 } from '../utils/easterEggs';
 import { DinoMiniGame } from './DinoMiniGame';
 import { StarDashGame } from './StarDashGame';
+import { BlackjackMiniGame } from './BlackjackMiniGame';
 
 interface EasterEggArenaProps {
   activeGame: EasterEggGameId;
@@ -182,6 +183,9 @@ export function EasterEggArena({ activeGame, onSelectGame, onClose }: EasterEggA
       <div className="p-4 sm:p-6">
         {/* 0. STAR DASH 2D ARCADE */}
         {activeGame === 'stardash' && <StarDashGame />}
+
+        {/* 0.5. SECRET BLACKJACK 21 */}
+        {activeGame === 'blackjack' && <BlackjackMiniGame />}
 
         {/* 1. PIEDRA PAPEL O TIJERA */}
         {activeGame === 'rps' && (

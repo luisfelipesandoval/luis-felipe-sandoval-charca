@@ -683,6 +683,64 @@ export function StarDashGame() {
       for (const ent of s.entities) {
         ctx.save();
         ctx.translate(ent.x, ent.y);
+
+        // Draw asteroid / meteor fire trail ("fueguito / estela pequeña de fuego") BEFORE spinning rock rotation
+        if (ent.kind === 'asteroid' || ent.kind === 'meteor') {
+          ctx.save();
+          // Align wake opposite to velocity vector (pointing upward behind the falling rock)
+          const wakeAngle = Math.atan2(ent.vy, ent.vx) - Math.PI / 2;
+          ctx.rotate(wakeAngle);
+
+          const phase = ent.rot * 3 + ent.radius;
+          const flicker = Math.sin(now * 0.03 + phase * 1.7) * 3.5;
+          const flickerX = Math.cos(now * 0.025 + phase) * 2;
+          const r = ent.radius;
+          const tailLen = (ent.kind === 'meteor' ? r * 2.5 : r * 2.15) + flicker;
+
+          // Outer orange-red flame wake
+          const outerGrad = ctx.createLinearGradient(0, -r * 0.2, 0, -tailLen);
+          outerGrad.addColorStop(0, 'rgba(255, 109, 0, 0.95)');
+          outerGrad.addColorStop(0.55, 'rgba(234, 67, 53, 0.8)');
+          outerGrad.addColorStop(1, 'rgba(234, 67, 53, 0)');
+          ctx.fillStyle = outerGrad;
+          ctx.beginPath();
+          ctx.moveTo(-r * 0.82, -r * 0.15);
+          ctx.quadraticCurveTo(-r * 0.55, -tailLen * 0.55, flickerX, -tailLen);
+          ctx.quadraticCurveTo(r * 0.55, -tailLen * 0.55, r * 0.82, -r * 0.15);
+          ctx.closePath();
+          ctx.fill();
+
+          // Inner bright yellow-gold flame tongue ("fueguito")
+          const innerLen = tailLen * 0.65;
+          ctx.fillStyle = '#FBBC05';
+          ctx.beginPath();
+          ctx.moveTo(-r * 0.48, -r * 0.2);
+          ctx.quadraticCurveTo(-r * 0.25, -innerLen * 0.5, -flickerX * 0.6, -innerLen);
+          ctx.quadraticCurveTo(r * 0.25, -innerLen * 0.5, r * 0.48, -r * 0.2);
+          ctx.closePath();
+          ctx.fill();
+
+          // White-hot flame base core
+          ctx.fillStyle = '#FFF8E1';
+          ctx.beginPath();
+          ctx.arc(0, -r * 0.55, r * 0.28, 0, Math.PI * 2);
+          ctx.fill();
+
+          // Trailing spark embers
+          const sparkOffset1 = ((now * 0.06 + phase * 13) % 14) + r * 1.1;
+          const sparkOffset2 = ((now * 0.08 + phase * 7) % 16) + r * 1.3;
+          ctx.fillStyle = '#FBBC05';
+          ctx.beginPath();
+          ctx.arc(-r * 0.35 + flickerX * 0.5, -sparkOffset1, 1.8, 0, Math.PI * 2);
+          ctx.fill();
+          ctx.fillStyle = '#FF6D00';
+          ctx.beginPath();
+          ctx.arc(r * 0.35 - flickerX * 0.5, -sparkOffset2, 1.5, 0, Math.PI * 2);
+          ctx.fill();
+
+          ctx.restore();
+        }
+
         ctx.rotate(ent.rot);
 
         if (ent.kind === 'star' || ent.kind === 'boss_core') {
@@ -708,11 +766,16 @@ export function StarDashGame() {
           ctx.lineWidth = 2;
           ctx.stroke();
         } else if (ent.kind === 'asteroid' || ent.kind === 'meteor') {
-          ctx.fillStyle = ent.kind === 'meteor' ? '#EA4335' : '#9AA0A6';
+          ctx.fillStyle = ent.kind === 'meteor' ? '#EA4335' : '#80868B';
           ctx.beginPath();
           ctx.arc(0, 0, ent.radius, 0, Math.PI * 2);
           ctx.fill();
-          ctx.fillStyle = 'rgba(0,0,0,0.28)';
+          // Fiery atmospheric entry rim glow
+          ctx.strokeStyle = ent.kind === 'meteor' ? '#FBBC05' : '#FF6D00';
+          ctx.lineWidth = 2;
+          ctx.stroke();
+          // Craters
+          ctx.fillStyle = 'rgba(0,0,0,0.34)';
           ctx.beginPath();
           ctx.arc(-4, -3, 3.5, 0, Math.PI * 2);
           ctx.arc(4, 4, 2.5, 0, Math.PI * 2);

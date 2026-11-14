@@ -1,4 +1,11 @@
-export type EasterEggGameId = 'stardash' | 'rps' | 'coin' | 'dice' | 'dino' | 'roulette';
+export type EasterEggGameId =
+  | 'stardash'
+  | 'blackjack'
+  | 'rps'
+  | 'coin'
+  | 'dice'
+  | 'dino'
+  | 'roulette';
 
 export interface EasterEggSuggestion {
   id: EasterEggGameId;
@@ -13,6 +20,12 @@ export const EASTER_EGG_SUGGESTIONS: EasterEggSuggestion[] = [
     phrase: 'jugar',
     title: 'Star Dash – Arcade Espacial 2D',
     badge: 'Arcade + Ranking Top 10',
+  },
+  {
+    id: 'blackjack',
+    phrase: 'blackjack',
+    title: 'Blackjack 21 – Casino Secreto',
+    badge: 'Juego Secreto 21',
   },
   {
     id: 'rps',
@@ -113,6 +126,15 @@ export function matchEasterEggQuery(rawQuery: string): EasterEggGameId | null {
     normalized === 'juego'
   ) {
     return 'stardash';
+  }
+  if (
+    normalized === 'blackjack' ||
+    normalized === 'black jack' ||
+    normalized === '21' ||
+    normalized === 'veintiuno' ||
+    normalized === 'juego secreto'
+  ) {
+    return 'blackjack';
   }
   if (
     normalized === 'piedra papel o tijera' ||
