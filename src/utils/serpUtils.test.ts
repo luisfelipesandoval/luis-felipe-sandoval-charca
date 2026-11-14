@@ -26,11 +26,6 @@ import {
   calculateCatchPoints,
   computeDifficultyParams,
 } from './starDashRules';
-import {
-  createShuffledDeck,
-  calculateHandValue,
-  evaluateBlackjackOutcome,
-} from './blackjackRules';
 import { SEO_CONFIG, MAIN_SEARCH_RESULTS, PROFILE_DATA } from '../data/profile';
 import { FRIENDS_LIST } from '../data/friends';
 
@@ -98,12 +93,9 @@ test('All main search results and profile links use descriptive text', () => {
   assert.equal(isDescriptiveLinkText(PROFILE_DATA.professor.name), true);
 });
 
-test('matchEasterEggQuery maps "jugar", "blackjack", and all secret phrases accurately', () => {
+test('matchEasterEggQuery maps "jugar" to stardash and all 5 secret phrases accurately', () => {
   assert.equal(matchEasterEggQuery('jugar'), 'stardash');
   assert.equal(matchEasterEggQuery('Star Dash'), 'stardash');
-  assert.equal(matchEasterEggQuery('blackjack'), 'blackjack');
-  assert.equal(matchEasterEggQuery('black jack'), 'blackjack');
-  assert.equal(matchEasterEggQuery('21'), 'blackjack');
   assert.equal(matchEasterEggQuery('piedra papel o tijera'), 'rps');
   assert.equal(matchEasterEggQuery('  Piedra, Papel o Tijera '), 'rps');
   assert.equal(matchEasterEggQuery('lanzar moneda'), 'coin');
@@ -125,48 +117,8 @@ test('Easter egg game mechanics (RPS, coin, dice, random picker, roulette) work 
   assert.equal(rollDiceOutcome(0.99), 6);
 
   const picked = pickRandomEasterEgg(0.5);
-  assert.equal(
-    ['stardash', 'blackjack', 'rps', 'coin', 'dice', 'dino', 'roulette'].includes(picked),
-    true
-  );
+  assert.equal(['stardash', 'rps', 'coin', 'dice', 'dino', 'roulette'].includes(picked), true);
   assert.equal(ROULETTE_PHRASES.length >= 3, true);
-});
-
-test('Blackjack 21 deck, soft/hard Ace hand calculation, and outcome evaluation work accurately', () => {
-  const deck = createShuffledDeck();
-  assert.equal(deck.length, 52);
-
-  // Ace + King = 21 (natural blackjack)
-  const bjHand = calculateHandValue([
-    { suit: '♠', rank: 'A', id: 'A♠' },
-    { suit: '♥', rank: 'K', id: 'K♥' },
-  ]);
-  assert.equal(bjHand.total, 21);
-  assert.equal(bjHand.isBlackjack, true);
-  assert.equal(bjHand.isSoft, true);
-
-  // Ace + 6 + 10 = 17 (Ace converts from 11 to 1 to avoid bust)
-  const hardHand = calculateHandValue([
-    { suit: '♠', rank: 'A', id: 'A♠' },
-    { suit: '♣', rank: '6', id: '6♣' },
-    { suit: '♦', rank: '10', id: '10♦' },
-  ]);
-  assert.equal(hardHand.total, 17);
-  assert.equal(hardHand.isSoft, false);
-  assert.equal(hardHand.isBust, false);
-
-  // Outcome evaluation
-  const playerWins = evaluateBlackjackOutcome(
-    [
-      { suit: '♠', rank: '10', id: '10♠' },
-      { suit: '♥', rank: 'Q', id: 'Q♥' },
-    ],
-    [
-      { suit: '♣', rank: '10', id: '10♣' },
-      { suit: '♦', rank: '8', id: '8♦' },
-    ]
-  );
-  assert.equal(playerWins, 'win');
 });
 
 test('Guestbook validation enforces 200-char max, defaults empty name to Anónimo, and blocks links', () => {
