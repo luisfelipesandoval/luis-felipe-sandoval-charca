@@ -101,6 +101,15 @@ test('All main search results and profile links use descriptive text', () => {
   assert.equal(igResult.displayUrl, 'instagram.com › undecidedn4me');
   assert.equal(igResult.title, 'Luis Felipe (@undecidedn4me) • Instagram');
   assert.equal(igResult.rel, 'noopener noreferrer me');
+
+  assert.equal(PROFILE_DATA.tiktok.url, 'https://www.tiktok.com/@sanvologs');
+  assert.equal(PROFILE_DATA.tiktok.handle, '@sanvologs');
+
+  const tiktokResult = MAIN_SEARCH_RESULTS.find((r) => r.id === 'mi-tiktok');
+  assert.ok(tiktokResult);
+  assert.equal(tiktokResult.displayUrl, 'tiktok.com › @sanvologs');
+  assert.equal(tiktokResult.title, 'Sanvologs (@sanvologs) | TikTok');
+  assert.equal(tiktokResult.rel, 'noopener noreferrer me');
 });
 
 test('matchEasterEggQuery maps "jugar" to stardash and all 5 secret phrases accurately', () => {

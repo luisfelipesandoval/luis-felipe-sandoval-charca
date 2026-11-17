@@ -79,6 +79,11 @@ export const PROFILE_DATA = {
     handle: '@undecidedn4me',
     label: 'Instagram de Luis Felipe Sandoval Charca (@undecidedn4me)',
   },
+  tiktok: {
+    url: 'https://www.tiktok.com/@sanvologs',
+    handle: '@sanvologs',
+    label: 'TikTok de Luis Felipe Sandoval Charca (@sanvologs)',
+  },
 };
 
 export const MAIN_SEARCH_RESULTS: SearchResultItem[] = [
@@ -134,6 +139,17 @@ export const MAIN_SEARCH_RESULTS: SearchResultItem[] = [
     description:
       'Sígueme en Instagram (@undecidedn4me) para ver mis publicaciones, proyectos visuales de diseño gráfico, edición de video y momentos del día a día.',
     href: 'https://www.instagram.com/undecidedn4me',
+    isExternal: true,
+    rel: 'noopener noreferrer me',
+  },
+  {
+    id: 'mi-tiktok',
+    siteName: 'TikTok',
+    displayUrl: 'tiktok.com › @sanvologs',
+    title: 'Sanvologs (@sanvologs) | TikTok',
+    description:
+      'Mira mis videos en TikTok (@sanvologs): edición creativa, contenido audiovisual, proyectos gráficos y momentos universitarios.',
+    href: 'https://www.tiktok.com/@sanvologs',
     isExternal: true,
     rel: 'noopener noreferrer me',
   },

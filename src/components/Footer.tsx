@@ -53,6 +53,15 @@ export function Footer() {
           </a>
 
           <a
+            href={PROFILE_DATA.tiktok.url}
+            target="_blank"
+            rel="noopener noreferrer me"
+            className="hover:text-[#202124] dark:hover:text-[#e8eaed] hover:underline transition-colors"
+          >
+            TikTok ({PROFILE_DATA.tiktok.handle})
+          </a>
+
+          <a
             href={PROFILE_DATA.professor.url}
             target="_blank"
             rel="noopener noreferrer"
