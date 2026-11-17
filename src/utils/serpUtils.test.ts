@@ -6,6 +6,8 @@ import {
   getWordmarkColoredChars,
   isValidMetaDescriptionLength,
   isDescriptiveLinkText,
+  resolveInitialTheme,
+  getNextTheme,
 } from './serpUtils';
 import {
   matchEasterEggQuery,
@@ -162,4 +164,16 @@ test('Star Dash combo scoring, difficulty ramp, and leaderboard validation work 
   assert.equal(validScore.valid, true);
   assert.equal(validScore.playerName, 'Luis Felipe');
   assert.equal(validScore.score, 1450);
+});
+
+test('Manual theme resolution and toggling override system preference accurately', () => {
+  // Stored manual preference always overrides system setting
+  assert.equal(resolveInitialTheme('dark', false), 'dark');
+  assert.equal(resolveInitialTheme('light', true), 'light');
+  // Falls back to system preference when no manual choice is stored
+  assert.equal(resolveInitialTheme(null, true), 'dark');
+  assert.equal(resolveInitialTheme(undefined, false), 'light');
+
+  assert.equal(getNextTheme('light'), 'dark');
+  assert.equal(getNextTheme('dark'), 'light');
 });

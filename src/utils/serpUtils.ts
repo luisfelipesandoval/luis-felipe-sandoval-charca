@@ -69,3 +69,28 @@ export function isDescriptiveLinkText(text: string): boolean {
   const bannedPhrases = ['haz clic aquí', 'haz click aquí', 'clic aquí', 'click here', 'aquí'];
   return !bannedPhrases.includes(normalized);
 }
+
+export type ThemeMode = 'light' | 'dark';
+
+export const THEME_STORAGE_KEY = 'lf_serp_theme_preference';
+
+/**
+ * Resolves the initial theme from manual user preference in storage if present,
+ * falling back to the operating system's prefers-color-scheme setting.
+ */
+export function resolveInitialTheme(
+  storedTheme: string | null | undefined,
+  systemPrefersDark: boolean
+): ThemeMode {
+  if (storedTheme === 'dark' || storedTheme === 'light') {
+    return storedTheme;
+  }
+  return systemPrefersDark ? 'dark' : 'light';
+}
+
+/**
+ * Toggles between light and dark theme modes.
+ */
+export function getNextTheme(current: ThemeMode): ThemeMode {
+  return current === 'dark' ? 'light' : 'dark';
+}

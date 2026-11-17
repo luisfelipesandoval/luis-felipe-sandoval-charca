@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { Header } from './components/Header';
 import { KnowledgePanel } from './components/KnowledgePanel';
 import { SearchResults } from './components/SearchResults';
@@ -13,8 +13,12 @@ import { Footer } from './components/Footer';
 import {
   formatSearchStatsText,
   generateRandomSearchSeconds,
+  getNextTheme,
+  resolveInitialTheme,
   SEARCH_TABS,
   TabId,
+  THEME_STORAGE_KEY,
+  ThemeMode,
 } from './utils/serpUtils';
 import {
   EASTER_EGG_SUGGESTIONS,
@@ -23,6 +27,40 @@ import {
 } from './utils/easterEggs';
 
 export default function App() {
+  const [theme, setTheme] = useState<ThemeMode>(() => {
+    if (typeof window === 'undefined') return 'light';
+    let stored: string | null = null;
+    try {
+      stored = window.localStorage.getItem(THEME_STORAGE_KEY);
+    } catch {
+      stored = null;
+    }
+    const prefersDark = window.matchMedia?.('(prefers-color-scheme: dark)').matches ?? false;
+    return resolveInitialTheme(stored, prefersDark);
+  });
+
+  useEffect(() => {
+    const root = document.documentElement;
+    if (theme === 'dark') {
+      root.classList.add('dark');
+    } else {
+      root.classList.remove('dark');
+    }
+    root.style.colorScheme = theme;
+  }, [theme]);
+
+  const handleToggleTheme = () => {
+    setTheme((prev) => {
+      const next = getNextTheme(prev);
+      try {
+        window.localStorage.setItem(THEME_STORAGE_KEY, next);
+      } catch {
+        // Ignore storage quota errors
+      }
+      return next;
+    });
+  };
+
   const [searchQuery, setSearchQuery] = useState('Luis Felipe Sandoval Charca');
   const [activeTab, setActiveTab] = useState<TabId>('todo');
   const [decorativeToast, setDecorativeToast] = useState<string | null>(null);
@@ -108,13 +146,13 @@ export default function App() {
   const statsText = formatSearchStatsText(randomSeconds, 1);
 
   return (
-    <div className="min-h-screen flex flex-col bg-white dark:bg-[#202124] text-[#202124] dark:text-[#e8eaed]">
+    <div className="min-h-screen flex flex-col bg-white dark:bg-[#202124] text-[#202124] dark:text-[#e8eaed] transition-colors duration-200">
       {/* Single visually hidden H1 for semantic SEO hierarchy */}
       <h1 className="sr-only">
         Luis Felipe Sandoval Charca – Estudiante de Administración de Negocios en la Universidad Católica San Pablo (UCSP)
       </h1>
 
-      {/* 1 & 2. Top bar (Wordmark + Search Bar + "Voy a tener suerte") and Tabs */}
+      {/* 1 & 2. Top bar (Wordmark + Search Bar + "Voy a tener suerte" + Theme Toggle) and Tabs */}
       <Header
         searchQuery={searchQuery}
         onSearchQueryChange={setSearchQuery}
@@ -125,6 +163,8 @@ export default function App() {
         activeTab={activeTab}
         onTabChange={handleTabChange}
         decorativeToast={decorativeToast}
+        theme={theme}
+        onToggleTheme={handleToggleTheme}
       />
 
       {/* Main Content Container */}

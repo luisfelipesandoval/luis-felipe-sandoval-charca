@@ -32,7 +32,10 @@ export function DinoMiniGame() {
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
 
-    const isDark = window.matchMedia?.('(prefers-color-scheme: dark)').matches;
+    const isDark =
+      document.documentElement.classList.contains('dark') ||
+      (!document.documentElement.style.colorScheme &&
+        window.matchMedia?.('(prefers-color-scheme: dark)').matches);
     const width = canvas.width;
     const height = canvas.height;
     const groundY = height - 28;
