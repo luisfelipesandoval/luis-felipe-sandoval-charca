@@ -44,6 +44,15 @@ export function Footer() {
           </a>
 
           <a
+            href={PROFILE_DATA.instagram.url}
+            target="_blank"
+            rel="noopener noreferrer me"
+            className="hover:text-[#202124] dark:hover:text-[#e8eaed] hover:underline transition-colors"
+          >
+            Instagram ({PROFILE_DATA.instagram.handle})
+          </a>
+
+          <a
             href={PROFILE_DATA.professor.url}
             target="_blank"
             rel="noopener noreferrer"

@@ -20,6 +20,7 @@ export interface SearchResultItem {
   description: string;
   href: string;
   isExternal: boolean;
+  rel?: string;
   secondaryLink?: {
     label: string;
     href: string;
@@ -73,6 +74,11 @@ export const PROFILE_DATA = {
     url: 'https://www.linkedin.com/in/luis-felipe-sandoval-316935175/',
     label: 'LinkedIn de Luis Felipe Sandoval Charca',
   },
+  instagram: {
+    url: 'https://www.instagram.com/undecidedn4me',
+    handle: '@undecidedn4me',
+    label: 'Instagram de Luis Felipe Sandoval Charca (@undecidedn4me)',
+  },
 };
 
 export const MAIN_SEARCH_RESULTS: SearchResultItem[] = [
@@ -119,6 +125,17 @@ export const MAIN_SEARCH_RESULTS: SearchResultItem[] = [
       'Conecta conmigo en LinkedIn para conocer mi trayectoria académica en la Universidad Católica San Pablo, mis habilidades en gestión de negocios, diseño gráfico y producción audiovisual, así como futuras colaboraciones profesionales.',
     href: 'https://www.linkedin.com/in/luis-felipe-sandoval-316935175/',
     isExternal: true,
+  },
+  {
+    id: 'mi-instagram',
+    siteName: 'Instagram',
+    displayUrl: 'instagram.com › undecidedn4me',
+    title: 'Luis Felipe (@undecidedn4me) • Instagram',
+    description:
+      'Sígueme en Instagram (@undecidedn4me) para ver mis publicaciones, proyectos visuales de diseño gráfico, edición de video y momentos del día a día.',
+    href: 'https://www.instagram.com/undecidedn4me',
+    isExternal: true,
+    rel: 'noopener noreferrer me',
   },
   {
     id: 'introduccion-computacion',

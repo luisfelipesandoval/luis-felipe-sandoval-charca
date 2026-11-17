@@ -72,7 +72,7 @@ export function SearchResults({
               <a
                 href={result.href}
                 target="_blank"
-                rel="noopener noreferrer"
+                rel={result.rel ?? 'noopener noreferrer'}
                 className="text-[#1a0dab] dark:text-[#8ab4f8] visited:text-[#681da8] dark:visited:text-[#c58af9] group-hover:underline inline-flex items-center gap-1.5"
               >
                 <span>{result.title}</span>
